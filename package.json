@@ -1,0 +1,29 @@
+{
+	"name": "api-test-plan",
+	"version": "1.0.0",
+	"description": "Test plan and automation for User Management REST API",
+	"scripts": {
+		"test": "jest",
+		"test:watch": "jest --watchAll",
+		"local-server": "node localServer/server.js",
+		"local-server:dev": "nodemon localServer/server.js"
+	},
+	"keywords": [
+		"api",
+		"testing",
+		"jest",
+		"axios",
+		"automation",
+		"rest"
+	],
+	"author": "Nicholas Ellis",
+	"license": "MIT",
+	"dependencies": {
+		"axios": "^1.5.0",
+		"express": "^5.1.0"
+	},
+	"devDependencies": {
+		"jest": "^30.0.5",
+		"nodemon": "^3.1.10"
+	}
+}
