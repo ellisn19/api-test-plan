@@ -4,9 +4,12 @@
 	"description": "Test plan and automation for User Management REST API",
 	"scripts": {
 		"test": "jest",
+		"test:file": "jest --",
 		"test:watch": "jest --watchAll",
+		"test:watch:file": "jest --watch --",
 		"local-server": "node localServer/server.js",
-		"local-server:dev": "nodemon localServer/server.js"
+		"local-server:dev": "nodemon localServer/server.js",
+		"help": "npm run"
 	},
 	"keywords": [
 		"api",
