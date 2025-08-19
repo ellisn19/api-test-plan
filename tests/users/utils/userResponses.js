@@ -13,7 +13,6 @@ function mockPostUserSuccess(user) {
 	};
 }
 
-// https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status#client_error_responses
 function buildMockError(status, message) {
 	if (status >= 400 && status < 500) return mockClientError(status, message);
 	if (status >= 500 && status < 600) return mockServerError(status, message);
