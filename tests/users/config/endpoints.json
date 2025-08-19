@@ -1,0 +1,6 @@
+{
+	"usersBaseUrl": {
+		"v1": "https://fakestoreapi.com/users",
+		"localServerUrl": "http://localhost:3000/users"
+	}
+}
