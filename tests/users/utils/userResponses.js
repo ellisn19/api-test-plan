@@ -1,18 +1,27 @@
 const User = require('../utils/userFactory');
 
-const { ID, USERNAME, EMAIL, PASSWORD } = User;
+function mockPostUserSuccess(user, version = 'v1') {
+	const schema = User.getSchema(version);
+	if (!schema)
+		throw new Error(
+			`Schema version "${version}" not found. Please check available versions in User.getSchema().`
+		);
 
-function mockPostUserSuccess(user) {
-	return {
-		status: 201,
-		statusText: 'Created',
-		data: {
-			[ID]: Math.floor(Math.random() * 1_000_000),
-			[USERNAME]: user[USERNAME],
-			[EMAIL]: user[EMAIL],
-			[PASSWORD]: user[PASSWORD],
-		},
-	};
+	switch (version) {
+		case 'v1':
+			return {
+				status: 201,
+				statusText: 'Created',
+				data: {
+					[schema.ID]: Math.floor(Math.random() * 1_000_000),
+					[schema.USERNAME]: user[schema.USERNAME],
+					[schema.EMAIL]: user[schema.EMAIL],
+					[schema.PASSWORD]: user[schema.PASSWORD],
+				},
+			};
+		default:
+			break;
+	}
 }
 
 function buildMockError(status, message) {

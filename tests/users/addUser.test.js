@@ -12,10 +12,10 @@ const TypeValidator = require('../utils/typeValidator.js');
 
 jest.mock('axios');
 
-const userApiClient = new UserApiClient(endpoints.usersBaseUrl.v1);
-const { ID, USERNAME, EMAIL, PASSWORD } = User;
+describe('addUser v1', () => {
+	const userApiClient = new UserApiClient(endpoints.usersBaseUrl.v1);
+	const { ID, USERNAME, EMAIL, PASSWORD } = User.getSchema('v1');
 
-describe('addUser', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 	});
