@@ -1,14 +1,16 @@
 const User = require('../utils/userFactory');
 
+const { ID, USERNAME, EMAIL, PASSWORD } = User;
+
 function mockPostUserSuccess(user) {
 	return {
 		status: 201,
 		statusText: 'Created',
 		data: {
-			[User.FIELDS.ID]: Math.floor(Math.random() * 1_000_000),
-			[User.FIELDS.USERNAME]: user[User.FIELDS.USERNAME],
-			[User.FIELDS.EMAIL]: user[User.FIELDS.EMAIL],
-			[User.FIELDS.PASSWORD]: user[User.FIELDS.PASSWORD],
+			[ID]: Math.floor(Math.random() * 1_000_000),
+			[USERNAME]: user[USERNAME],
+			[EMAIL]: user[EMAIL],
+			[PASSWORD]: user[PASSWORD],
 		},
 	};
 }
