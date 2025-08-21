@@ -23,7 +23,7 @@ class User {
 	}
 
 	static createUser(props = {}, version = 'v1') {
-		const schema = schemas[version];
+		const schema = this.getSchema(version);
 		const user = {};
 		for (const key of Object.values(schema)) {
 			user[key] = props[key] ?? null;
@@ -32,14 +32,19 @@ class User {
 	}
 
 	static createGenericUser(version = 'v1') {
-		const schema = schemas[version];
+		const schema = this.getSchema(version);
 		const randomId = Math.floor(Math.random() * 1_000_000);
 
-		return {
-			[schema.USERNAME]: `user${randomId}`,
-			[schema.EMAIL]: `user${randomId}@example.com`,
-			[schema.PASSWORD]: `password${randomId}`,
-		};
+		switch (version) {
+			case 'v1':
+				return {
+					[schema.USERNAME]: `user${randomId}`,
+					[schema.EMAIL]: `user${randomId}@example.com`,
+					[schema.PASSWORD]: `password${randomId}`,
+				};
+			default:
+				throw new Error(`No mock user factory for schema version: ${version}`);
+		}
 	}
 
 	static generateGenericUsers(count, version = 'v1') {
@@ -51,12 +56,21 @@ class User {
 	}
 
 	static validate(actual, expected, version = 'v1') {
-		const schema = schemas[version];
-		this.#validateTypes(actual, schema);
-		this.#validateValues(actual, expected, schema);
+		const schema = this.getSchema(version);
+
+		switch (version) {
+			case 'v1':
+				this.#validateTypesV1(actual, schema);
+				this.#validateValuesV1(actual, expected, schema);
+				break;
+			default:
+				throw new Error(
+					`No validation rules defined for schema version: ${version}`
+				);
+		}
 	}
 
-	static #validateTypes(actual, schema) {
+	static #validateTypesV1(actual, schema) {
 		if (!TypeValidator.isNumber(actual[schema.ID])) {
 			throw new Error(`Invalid ID: ${actual[schema.ID]}`);
 		}
@@ -72,7 +86,7 @@ class User {
 		}
 	}
 
-	static #validateValues(actual, expected, schema) {
+	static #validateValuesV1(actual, expected, schema) {
 		if (actual[schema.USERNAME] !== expected[schema.USERNAME]) {
 			throw new Error(
 				`Username mismatch. Expected: ${expected[schema.USERNAME]}, Actual: ${
