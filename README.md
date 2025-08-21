@@ -68,6 +68,7 @@ user-api-test-plan/
 	 │   │   ├── __mocks__/
 	 │   │   │   └── userApiClient.js   # userApiClient mock file
 	 │   │   ├── userFactory.js         # Factory for creating test user data
+	 │   │   ├── userFactory.test.js    # Tests for user factory
 	 │   │   └── userApiClient.js       # API client for user-related requests
 	 │   ├── addUser.test.js            # Tests for POST /users
 	 │   ├── deleteUser.test.js         # Tests for DELETE /users/:id
@@ -271,7 +272,7 @@ user-api-test-plan/
 	}
 ```
 
-- `User.validate(expected, actual, version)` - ensures user object returned matches expected types and values.
+`User.validate(expected, actual, version)` - ensures user object returned matches expected types and values.
 
 ```js
 	static validate(actual, expected, version = 'v1') {
@@ -290,7 +291,7 @@ user-api-test-plan/
 	}
 ```
 
-- `userResponses.js` - simulates API responses.
+`userResponses.js` - simulates API responses.
 
 **Assertions**: Validate HTTP status, statusText, response schema, field presence, and value correctness.
 
