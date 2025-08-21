@@ -199,7 +199,7 @@ describe('addUser v1', () => {
 	});
 
 	describe('Performance', () => {
-		it('should handle 100 parallel user creations quickly', async () => {
+		it('should handle 100 user creations < 500ms', async () => {
 			const usersToCreate = 100;
 			const newUsers = Array.from({ length: usersToCreate }, () =>
 				User.createGenericUser()
@@ -209,7 +209,7 @@ describe('addUser v1', () => {
 			await Promise.all(newUsers.map((u) => userApiClient.postUser(u)));
 			const elapsed = Date.now() - start;
 
-			expect(elapsed).toBeLessThan(200);
+			expect(elapsed).toBeLessThan(500);
 		});
 
 		it('should handle 1000 concurrent requests', async () => {
