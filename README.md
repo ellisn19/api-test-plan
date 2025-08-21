@@ -1,118 +1,86 @@
-# API Test Plan
+# Fake Store API - Users Enpoint Test Plan
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Jest](https://img.shields.io/badge/jest-30.0.5-brightgreen)
+![Axios](https://img.shields.io/badge/axios-1.5.0-blue)
 
-## Automation Considerations
+## Overview
 
-### Test Framework:
+This test plan validates the Fake Store API Users endpoints for functional correctness, performance, and reliability across all CRUD operations.
 
-![Jest](https://img.shields.io/badge/jest-30.0.5-brightgreen) ![Axios](https://img.shields.io/badge/axios-1.5.0-blue)
+## Scope
 
-Mocking: All requests are mocked with `jest.mock('axios')` to simulate both happy and negative paths.
+Endpoints covered:
 
-Reusable Helpers:
+- **POST** `/users`
+- **POST** `/users`
+- **POST** `/users/:id`
+- **POST** `/users/:id`
+- **DELETE** `/users/:id`
 
-- `User.createGenericUser()` - generates valid test user data.
-- `User.createGenericUsers(count)` - generates list of valid test user data.
-- `User.validate()` - ensures user object returned matches expected types and values.
-- `userResponses.js` - simulates API responses.
+## Test Strategy
 
-Assertions: Validate HTTP status, statusText, response schema, field presence, and value correctness.
+The following types of testing are applied:
 
-## Additional Considerations
-
-- Environment Configuration
-  - Separate config for local/staging/production URLs (`endpoints.json`).
-  - Also could include multiple API versions in the same file.
-- API Versioning Strategies
-
-  - Option 1: Single Test Suite, Multiple Endpoints
-    - Parameterize the test runner to loop over all configured API versions.
-    - For example, load `endpoints.userBaseUrl.v1` and `endpoints.userBaseUrl.v2`, and dynamically create `UserApiClient` instances inside `describe.each`
-  - Option 2: Seperate Clients and Test Suites
-
-    - Create distinct `UserApiCLientV1` and `UserApiClientV2` (or pass version as a contructor agrument).
-    - Duplicate only the tests that differ.
-    - Keep shared tests in a common helper function.
-    - Best for when versions introduce breaking changes.
-
-  - Local development server (`http://localhost:3000`) for testing.
-
-- Optional: rate limiting / throttling tests.
-- Ensure API returns clear, consistent error messages.
+- **Functional**: Validate expected success paths for each endpoint
+- **Negative**: Missing or invalid fields, invalid IDs, empty requests
+- **Contract**: Verify schema matches expected user object structure
+- **Performance**: Check response times and basic concurrency handling
+- **Idempotency**: Ensure repeated PUT/DELETE requests behave consistently
+- **Error handling**: Simulate 4xx/5xx server responses
 
 ## How to Use
 
-1. Clone the Repository
+1.  Clone the Repository and Install Dependencies
 
-   ```bash
-   git clone https://github.com/ellisn19/api-test-plan.git
-   cd api-test-plan
-   ```
+    ```bash
+    git clone https://github.com/ellisn19/api-test-plan.git
+    cd api-test-plan
+    npm install
+    ```
 
-2. Install Dependencies
+2.  Test Commands
 
-   ```bash
-   npm install
-   ```
-
-3. Test Commands
-
-   ```bash
-   npm test                             # Run All Tests
-   npm test:file <testFilePath>         # Run a Single Test File
-   npm run test:watch                   # Reruns all tests on file changes
-   npm run test:watch <testFilePath>    # Reruns single test file on file changes
-   ```
+    ```bash
+    npm test                             # Run All Tests
+    npm test:file <testFilePath>         # Run a Single Test File
+    npm run test:watch                   # Reruns all tests on file changes
+    npm run test:watch <testFilePath>    # Reruns single test file on file changes
+    ```
 
 ## Project Structure
 
 ```bash
 user-api-test-plan/
-├── README.md                    # Overview, test plan summary, how to run tests
+├── README.md                          # Overview, test plan summary, how to run tests
 ├── LICENSE
-├── package.json                 # NPM dependencies and scripts
-├── jest.config.js               # Jest configuration file
-├── .gitignore                   # Ignore node_modules, coverage, etc.
-└── tests/                       # All test code organized here
-    ├── users/                   # Group tests by resource/domain
-    │   ├── config/
-    │   │   └── endpoints.json   # API endpoints configuration
-    │   ├── localServer/
-    │   │   └── server.js        # Locally hosted server minicing user api
-    │   ├── utils/
-    │   │   ├── userFactory.js   # Factory for creating test user data
-    │   │   └── userApiClient.js # API client for user-related requests
-    │   ├── addUser.test.js      # Tests for POST /users
-    │   ├── deleteUser.test.js   # Tests for DELETE /users/:id
-    │   ├── getUser.test.js      # Tests for GET /users/:id
-    │   ├── getUsers.test.js     # Tests for GET /users (all users)
-    │   └── updateUser.test.js   # Tests for PUT /users/:id
-    └── utils/                   # Utility functions/helpers (e.g., test data setup)
-        └── typeValidator.js     # Type validation functions for test data
+├── package.json                       # NPM dependencies and scripts
+├── jest.config.js                     # Jest configuration file
+├── .gitignore                         # Ignore node_modules, coverage, etc.
+└── tests/                             # All test code organized here
+	 ├── users/                        # Group tests by resource/domain
+	 │   ├── config/
+	 │   │   ├── userSchema.v1.json     # Current Schema for User endpoint
+	 │   │   └── endpoints.json         # API endpoints configuration
+	 │   ├── localServer/
+	 │   │   └── server.js              # Locally hosted server minicing user api
+	 │   ├── utils/
+	 │   │   ├── __mocks__/
+	 │   │   │   └── userApiClient.js   # userApiClient mock file
+	 │   │   ├── userFactory.js         # Factory for creating test user data
+	 │   │   └── userApiClient.js       # API client for user-related requests
+	 │   ├── addUser.test.js            # Tests for POST /users
+	 │   ├── deleteUser.test.js         # Tests for DELETE /users/:id
+	 │   ├── getUser.test.js            # Tests for GET /users/:id
+	 │   ├── getUsers.test.js           # Tests for GET /users (all users)
+	 │   └── updateUser.test.js         # Tests for PUT /users/:id
+	 └── utils/                         # Utility functions/helpers (e.g., test data setup)
+		  └── typeValidator.js          # Type validation functions for test data
 ```
 
-## Endpoint Overview:
+# Test Scenarios by Endpoint
 
-- POST `/users`
-- GET `/users`
-- GET `/users/:id`
-- PUT `/users/:id`
-- DELETE `/users/:id`
-
-## Types of Testing:
-
-- Functional testing: Happy path + error scenarios.
-- Negative testing: Missing or invalid fields, invalid IDs, empty requests.
-- Validation testing: Field types, allowed values, max/min lengths.
-- Performance testing: Response time, load, and concurrency.
-- Contract testing: Verify response schema matches API documentation.
-- Idempotency: Check PUT and DELETE behave correctly if repeated.
-- Data consistency: Verify that POST, PUT, DELETE change data as expected.
-
-# Test Scenarios / Cases
-
-## POST `/users`
+## POST `/users` - Add a new user
 
 **Docs:** [Fake Store API - Add a new user](https://fakestoreapi.com/docs#tag/Users/operation/addUser)
 
@@ -137,12 +105,6 @@ user-api-test-plan/
 - Handles 1000 concurrent POST requests successfully.
 - Handles large payloads efficiently (10k+ characters in fields).
 
-### Error Handling:
-
-- Simulates network failure (timeouts, DNS errors).
-
----
-
 ## GET `/users`
 
 **Docs:** [Fake Store API - Get all users](https://fakestoreapi.com/docs#tag/Users/operation/getAllUsers)
@@ -165,12 +127,6 @@ user-api-test-plan/
 - Handles 100 users in <500ms.
 - Handles 1000 users in <1000ms.
 - Concurrency: supports 500 parallel GET requests.
-
-### Error Handling:
-
-- Simulates network failure (timeouts, DNS errors).
-- Simulates server error (`500`).
-- Simulates throttling / rate-limiting (`429`).
 
 ## GET `/users/:id`
 
@@ -201,12 +157,6 @@ user-api-test-plan/
 
 - Handles 100 sequential GET requests in <500ms.
 - Handles 1000 concurrent GET requests successfully.
-
-### Error Handling:
-
-- Simulate server crash (500).
-- Simulate network failure (timeout, DNS error).
-- Handles rate limiting (429).
 
 ## PUT `/users/:id`
 
@@ -246,12 +196,6 @@ user-api-test-plan/
 - Repeated `PUT` requests with same body return same result.
 - No duplicate user creation occurs.
 
-### Error Handling:
-
-- Simulate network failure (timeout, DNS error).
-- Simulate server error (500).
-- Handles rate limiting (429).
-
 ## DELETE `/users/:id`
 
 **Docs:** [Fake Store API - Delete a user](https://fakestoreapi.com/docs#tag/Users/operation/deleteUser)
@@ -285,8 +229,80 @@ user-api-test-plan/
 
 - Repeated `DELETE` on same `id` returns `404` or no-op without error.
 
-### Error Handling:
+## Error Handling (All Endpoints)
 
 - Simulate network failure (timeout, DNS error).
-- Simulate server error (500).
+- Simulate server crash (500).
 - Handles rate limiting (429).
+
+# Automation Considerations
+
+## Test Framework:
+
+**Mocking**: All requests are mocked with `jest.mock('axios')` to simulate both happy and negative paths.
+
+**Reusable Helpers**:
+
+- `User.createGenericUser()` - generates valid test user data.
+- `User.createGenericUsers(count)` - generates list of valid test user data.
+- `User.validate(expected, actual)` - ensures user object returned matches expected types and values.
+- `userResponses.js` - simulates API responses.
+
+**Assertions**: Validate HTTP status, statusText, response schema, field presence, and value correctness.
+
+## Additional Considerations
+
+### Environment Configuration
+
+Separate config for local/production/new version URLs (`endpoints.json`).
+
+```json
+{
+	"usersBaseUrl": {
+		"v1": "https://fakestoreapi.com/users",
+		"localServerUrl": "http://localhost:3000/users"
+	}
+}
+```
+
+Separate config for user schema (`userSchema.v1.json`).
+
+```json
+{
+	"ID": "id",
+	"USERNAME": "username",
+	"EMAIL": "email",
+	"PASSWORD": "password"
+}
+```
+
+### API Versioning Strategy
+
+- Schema aware helpers
+
+  - The `User` class exposes versioned schemas through `User.getSchema(version)` and factory methods like `User.createGenericUser(version)`.
+  - Tests destructure the fields they need from the schema (`const {ID, USERNAME, ... } = User.getSchema('v2)`), which keeps assertions aligned with the correct version automatically.
+  - `UserApiClient` can be constructed with a version specific base URL, so each `describe` block can target a specific API version without duplicating schema logic.
+
+- Local development server (`http://localhost:3000`) for testing.
+
+<!-- - Ensure API returns clear, consistent error messages. -->
+
+## Entry Criteria
+
+- API endpoints are reachable at the configured base URL
+- Documentation of schema and expected responses is available
+- Schema has been properly configured based on documentation
+- Node.js + npm installed to run the test framework
+
+## Exit Criteria
+
+- All Critical functional and negative tests pass
+- No open blocker or critical defects remain
+- Automated test suite runs successfully in CI without failures
+
+## Risks and Assumptions
+
+- Assumes responses from API due to lack of reactivity based on inputs
+- Assumes test data can be created/deleted without persistence issues
+- Assumes schema remains stable during testing
