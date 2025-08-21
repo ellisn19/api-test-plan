@@ -124,7 +124,7 @@ user-api-test-plan/
 
 ### Performance:
 
-- Handles 100 parallel user creations.
+- Handles 100 user creations <500ms.
 - Handles 1000 concurrent POST requests successfully.
 - Handles large payloads efficiently (10k+ characters in fields).
 
