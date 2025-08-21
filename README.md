@@ -80,6 +80,29 @@ user-api-test-plan/
 
 # Test Scenarios by Endpoint
 
+## GET `/users`
+
+**Docs:** [Fake Store API - Get all users](https://fakestoreapi.com/docs#tag/Users/operation/getAllUsers)
+
+### Functional:
+
+- Returns expected schema on success.
+- Returns expected schema on error.
+- Returns empty array when no users exist.
+- Each user object contains expected fields (`id`, `username`, `email`, `password`).
+- Handles additional/unexpected fields gracefully.
+- Consistent ordering across repeated requests (unless API specifies otherwise).
+
+### Negative:
+
+- Fails gracefully if server returns malformed JSON.
+
+### Performance:
+
+- Handles 100 users in <500ms.
+- Handles 1000 users in <1000ms.
+- Concurrency: supports 500 parallel GET requests.
+
 ## POST `/users` - Add a new user
 
 **Docs:** [Fake Store API - Add a new user](https://fakestoreapi.com/docs#tag/Users/operation/addUser)
@@ -105,29 +128,6 @@ user-api-test-plan/
 - Handles 1000 concurrent POST requests successfully.
 - Handles large payloads efficiently (10k+ characters in fields).
 
-## GET `/users`
-
-**Docs:** [Fake Store API - Get all users](https://fakestoreapi.com/docs#tag/Users/operation/getAllUsers)
-
-### Functional:
-
-- Returns expected schema on success.
-- Returns expected schema on error.
-- Returns empty array when no users exist.
-- Each user object contains expected fields (`id`, `username`, `email`, `password`).
-- Handles additional/unexpected fields gracefully.
-- Consistent ordering across repeated requests (unless API specifies otherwise).
-
-### Negative:
-
-- Fails gracefully if server returns malformed JSON.
-
-### Performance:
-
-- Handles 100 users in <500ms.
-- Handles 1000 users in <1000ms.
-- Concurrency: supports 500 parallel GET requests.
-
 ## GET `/users/:id`
 
 **Docs:** [Fake Store API - Get a single user](https://fakestoreapi.com/docs#tag/Users/operation/getUserById)
@@ -142,7 +142,7 @@ user-api-test-plan/
 
 ### Negative:
 
-- Returns `404 Not Found` for non-existent ID.
+- Returns `400 Bad Request` for non-existent ID.
 - Returns `400 Bad Request` if ID is not a number (e.g., `/users/abc`).
 - Handles `null` or empty `id` in request path.
 
@@ -164,7 +164,7 @@ user-api-test-plan/
 
 ### Functional:
 
-- Returns `200 OK` and updated user object.
+- Returns `200` and updated user object.
 - Updated fields persist correctly (username/email/password).
 - Can update only one field (partial update).
 - Accepts additional properties in request payload without error.
@@ -172,7 +172,7 @@ user-api-test-plan/
 
 ### Negative:
 
-- Returns `404 Not Found` when updating a non-existent user.
+- Returns `400 Bad Request` when updating a non-existent user.
 - Returns `400 Bad Request` when body is missing required fields.
 - Returns error when fields are empty or null.
 - Rejects invalid email format.
@@ -202,22 +202,18 @@ user-api-test-plan/
 
 ### Functional:
 
-- Returns `200 OK` or `204 No Content` on success.
-- User is removed from system — GET `/users/:id` returns `404` after deletion.
+- Returns `200 OK` on success.
+- User is removed from system, GET `/users/:id` returns `400` after deletion.
 - Can delete multiple users sequentially.
-- Returns confirmation object (if API supports it).
 
 ### Negative:
 
-- Returns `404 Not Found` when deleting a non-existent user.
+- Returns `404 Bad Request` when deleting a non-existent user.
 - Returns `400 Bad Request` for invalid `id` (non-numeric).
-- Unauthorized (401) or forbidden (403) delete attempts handled correctly.
 
 ### Validation / Contract:
 
-- Ensure response schema (if any) matches documentation.
 - Verify user no longer exists in GET `/users`.
-- Ensure no orphaned references (if relational constraints exist).
 
 ### Performance:
 
@@ -227,7 +223,7 @@ user-api-test-plan/
 
 ### Idempotency:
 
-- Repeated `DELETE` on same `id` returns `404` or no-op without error.
+- Repeated `DELETE` on same `id` returns `400 Bad Request`.
 
 ## Error Handling (All Endpoints)
 
@@ -285,8 +281,6 @@ Separate config for user schema (`userSchema.v1.json`).
   - `UserApiClient` can be constructed with a version specific base URL, so each `describe` block can target a specific API version without duplicating schema logic.
 
 - Local development server (`http://localhost:3000`) for testing.
-
-<!-- - Ensure API returns clear, consistent error messages. -->
 
 ## Entry Criteria
 
