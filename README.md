@@ -239,9 +239,57 @@ user-api-test-plan/
 
 **Reusable Helpers**:
 
-- `User.createGenericUser()` - generates valid test user data.
-- `User.createGenericUsers(count)` - generates list of valid test user data.
-- `User.validate(expected, actual)` - ensures user object returned matches expected types and values.
+`User.createGenericUser()` - generates valid test user data.
+
+```js
+	static createGenericUser(version = 'v1') {
+		const schema = this.getSchema(version);
+		const randomId = Math.floor(Math.random() * 1_000_000);
+
+		switch (version) {
+			case 'v1':
+				return {
+					[schema.USERNAME]: `user${randomId}`,
+					[schema.EMAIL]: `user${randomId}@example.com`,
+					[schema.PASSWORD]: `password${randomId}`,
+				};
+			default:
+				throw new Error(`No mock user factory for schema version: ${version}`);
+		}
+	}
+```
+
+`User.createGenericUsers(count)` - generates list of valid test user data.
+
+```js
+	static generateGenericUsers(count, version = 'v1') {
+		const users = [];
+		for (let i = 0; i < count; i++) {
+			users.push(this.createGenericUser(version));
+		}
+		return users;
+	}
+```
+
+- `User.validate(expected, actual, version)` - ensures user object returned matches expected types and values.
+
+```js
+	static validate(actual, expected, version = 'v1') {
+		const schema = this.getSchema(version);
+
+		switch (version) {
+			case 'v1':
+				this.#validateTypesV1(actual, schema);
+				this.#validateValuesV1(actual, expected, schema);
+				break;
+			default:
+				throw new Error(
+					`No validation rules defined for schema version: ${version}`
+				);
+		}
+	}
+```
+
 - `userResponses.js` - simulates API responses.
 
 **Assertions**: Validate HTTP status, statusText, response schema, field presence, and value correctness.
