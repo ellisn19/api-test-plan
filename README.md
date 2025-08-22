@@ -69,6 +69,7 @@ user-api-test-plan/
 	 │   │   │   └── userApiClient.js   # userApiClient mock file
 	 │   │   ├── userFactory.js         # Factory for creating test user data
 	 │   │   ├── userFactory.test.js    # Tests for user factory
+     │   │   ├── userResponse.js        # Mock success/error responses for users
 	 │   │   └── userApiClient.js       # API client for user-related requests
 	 │   ├── addUser.test.js            # Tests for POST /users
 	 │   ├── deleteUser.test.js         # Tests for DELETE /users/:id
