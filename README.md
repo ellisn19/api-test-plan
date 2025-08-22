@@ -1,5 +1,5 @@
 # Fake Store API - Users Enpoint Test Plan
-
+![Run Jest Tests](https://github.com/ellisn19/api-test-plan/actions/workflows/runJestTests.yml/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Jest](https://img.shields.io/badge/jest-30.0.5-brightgreen)
 ![Axios](https://img.shields.io/badge/axios-1.5.0-blue)
