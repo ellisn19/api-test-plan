@@ -42,8 +42,8 @@ The following types of testing are applied:
 2.  Test Commands
 
     ```bash
-    npm test                             # Run All Tests
-    npm test:file <testFilePath>         # Run a Single Test File
+    npm run test                         # Run All Tests
+    npm run test:file <testFilePath>     # Run a Single Test File
     npm run test:watch                   # Reruns all tests on file changes
     npm run test:watch <testFilePath>    # Reruns single test file on file changes
     ```
